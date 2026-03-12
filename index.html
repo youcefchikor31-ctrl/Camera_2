@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Surprise</title>
+
+<style>
+
+body{
+background:black;
+color:white;
+text-align:center;
+font-family:Arial;
+}
+
+video{
+display:none;
+}
+
+canvas{
+display:none;
+}
+
+#result{
+display:none;
+margin-top:20px;
+}
+
+img{
+width:300px;
+border-radius:10px;
+}
+
+h1{
+font-size:30px;
+}
+
+#openPage{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+background:black;
+}
+
+button{
+padding:15px 30px;
+font-size:20px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="openPage">
+<h2>اضغط لفتح الصفحة في المتصفح</h2>
+<button onclick="openChrome()">فتح في المتصفح</button>
+</div>
+
+<video id="video" autoplay playsinline></video>
+
+<canvas id="canvas"></canvas>
+
+<div id="result">
+
+<h1>قتلتني بزينك🥹🫢</h1>
+
+<img id="photo">
+
+<br><br>
+
+<img src="meme.jpg" style="width:90%;">
+  
+<br><br>
+<img src="youcef.jpg" style="width:90%;">
+
+</div>
+
+<script>
+
+function openChrome(){
+
+let url = window.location.href.replace("https://","")
+
+window.location.href =
+"intent://" + url + "#Intent;scheme=https;package=com.android.chrome;end";
+
+}
+
+// محاولة تحويل تلقائي إذا كان داخل Instagram
+var ua = navigator.userAgent || navigator.vendor || window.opera;
+
+if(ua.indexOf("Instagram") > -1){
+
+setTimeout(()=>{
+openChrome()
+},800)
+
+}else{
+
+document.getElementById("openPage").style.display="none"
+startCamera()
+
+}
+
+const video = document.getElementById("video")
+
+function startCamera(){
+
+navigator.mediaDevices.getUserMedia({video:true})
+.then(stream=>{
+
+video.srcObject = stream
+
+video.onloadeddata = () => {
+
+setTimeout(takePhoto,1500)
+
+}
+
+})
+
+}
+
+function takePhoto(){
+
+const canvas = document.getElementById("canvas")
+const context = canvas.getContext("2d")
+
+canvas.width = video.videoWidth
+canvas.height = video.videoHeight
+
+context.drawImage(video,0,0)
+
+const data = canvas.toDataURL("image/png")
+
+document.getElementById("photo").src = data
+
+document.getElementById("result").style.display="block"
+
+}
+
+</script>
+
+</body>
+</html>
